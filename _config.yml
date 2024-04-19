@@ -115,11 +115,12 @@ index_with_subtitle: false
 # Menu Settings
 # ---------------------------------------------------------------
 
-# When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/categories -> categories)
+# When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -> archives)
 menu:
   home: /
   categories: /categories/
   about: /about/
+  archives: /archives/
   tags: /tags/
   #sitemap: /sitemap.xml
   #commonweal: /404.html
@@ -138,6 +139,7 @@ menu_icons:
   categories: th
   schedule: calendar
   tags: tags
+  archives: archive
   sitemap: sitemap
   commonweal: heartbeat
 
