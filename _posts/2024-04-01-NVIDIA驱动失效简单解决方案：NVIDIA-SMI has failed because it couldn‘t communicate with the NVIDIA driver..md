@@ -3,10 +3,12 @@ title: NVIDIA驱动失效简单解决方案：NVIDIA-SMI has failed because it c
 tags: 
   - NVIDIA
   - BUG
+description:
+
 ---
 
 跑模型时显示只用到了 CPU。 CUDA 没有利用到
-![image-20240418120245712](assets/image-20240418120245712.png)
+![image-20240418120245712](./assets/image-20240418120245712.png)
 
 
 
