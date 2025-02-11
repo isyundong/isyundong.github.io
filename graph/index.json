@@ -1,0 +1,15 @@
+{
+  "graph": {
+    "/posts/awdawd/": {
+      "in": [],
+      "out": []
+    }
+  },
+  "pages": {
+    "/posts/awdawd/": {
+      "permalink": "/posts/awdawd/",
+      "section": "posts",
+      "title": "Awdawd"
+    }
+  }
+}
