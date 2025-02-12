@@ -34,20 +34,16 @@ Email me if you'd like to work together. _Or if you just wanna chat._
 
   [[params.links]]
     [[params.links.link]]
-      name = "Resume"
-      href = "/resume"
-      newTab = true
-    [[params.links.link]]
       name = "Email"
       href = "/contact"
       specialEmailLink = true
     [[params.links.link]]
       name = "Github"
-      href = "https://github.com/mavidser"
+      href = "https://github.com/isyundong"
       newTab = true
     [[params.links.link]]
-      name = "Instagram"
-      href = "https://instagram.com/mavidser"
+      name = "X"
+      href = "https://x.com/z971003"
       newTab = true
 
   [[params.links]]
