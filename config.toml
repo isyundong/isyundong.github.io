@@ -20,15 +20,15 @@ summaryLength = 0
   mainSections = ["posts", "photos"]
   specialEmail = "yundongzhang97@gmail.com"
   about = """
-Hey friend. I'm <b class="sway">Sid</b>.
+Hey there! I'm <b class="sway">Yundong</b>,
 
-This is my home on the internet. Come, have a tour. Please leave your shoes at the door.
+and this is my little corner of the internet. Feel free to take a look around, but please leave your shoes at the door!
 
-I work with technology for a living - mostly as a software engineer. Some details are available in the resume below. In addition, I'm interested in filmmaking, tinkering with electronics, and building a decentralized internet.
+I'm a software engineer by profession, with a passion for learning new things, tinkering with electronics, and working on building a decentralized internet.
 
-💖 I Love Dota2, Music, Art, World
+💖 I love Dota2, music, art, and the world we live in.
 
-Email me if you'd like to work together. _Or if you just wanna chat._
+If you're interested in collaborating, _or if you just want to chat, feel free to email me!_
 <br>
 """
 
