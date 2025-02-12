@@ -1,6 +1,6 @@
-baseURL = "https://sidverma.io/"
+baseURL = "https://971103.xyz/"
 languageCode = "en-us"
-title = "Sid Verma"
+title = "is Yundong"
 theme = "rocinante-2"
 paginate = 9999
 summaryLength = 0
@@ -18,7 +18,7 @@ summaryLength = 0
   favicon = "/icons/favicon.ico"
   socialBanner = "/icons/banner.png"
   mainSections = ["posts", "photos"]
-  specialEmail = "me@sidverma.io"
+  specialEmail = "yundongzhang97@gmail.com"
   about = """
 Hey friend. I'm <b class="sway">Sid</b>.
 
