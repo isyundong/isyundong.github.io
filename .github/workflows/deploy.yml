@@ -37,4 +37,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
         git remote add publisher https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        git push publisher master --force
+        git push publisher main --force
