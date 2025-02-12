@@ -34,7 +34,7 @@ jobs:
         git show-ref
     - name: Push to github
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
       run: |
-        git remote add publisher https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        git remote add publisher https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/isyundong.github.io.git
         git push publisher master --force
