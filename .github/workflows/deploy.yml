@@ -26,7 +26,7 @@ jobs:
       run: |
         git config --local user.email "actions@github.com"
         git config --local user.name "github-actions"
-        git checkout -b master
+        git checkout -b main
         ls | xargs rm -rf
         cp -r /tmp/output/* ./
         git add .
