@@ -1,0 +1,34 @@
+<!doctype html><html data-color-scheme=auto><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Mathematical operations on objects in javascript. · Home</title><link rel=stylesheet href=/css/rocinante.min.css><link rel=stylesheet type=text/css href=https://971103.xyz/css/style.43d9f1db361927f335592361b86ccbd6cfa942114cc7afe99c1a78eb7a648cb0.css><link rel="shortcut icon" href=/icons/favicon.ico><body><header><h2><a class=site-title href=https://971103.xyz>Home</a></h2></header><main><div class=post><div class=title-group><div class=title><h1>Mathematical operations on objects in javascript.</h1></div><div class=date><h5>Aug 11, 2018</h5></div></div><article class=content><p><em>All of these were executed on Node.js 6.9.1</em></p><pre><code>&gt; [] + []
+''
+</code></pre><p>Obviously.</p><pre><code>&gt; [] + {}
+'[object Object]'
+</code></pre><p>Less obvious, but okay.</p><pre><code>&gt; {} + []
+0
+</code></pre><p>Huh?</p><pre><code>&gt; {} + {}
+'[object Object][object Object]'
+</code></pre><p>Oh, fuck off.</p><p>I&rsquo;d rather just add strings to these from now on:</p><pre><code>&gt; [] + ''
+''
+</code></pre><pre><code>&gt; [] + '1'
+'1'
+</code></pre><pre><code>&gt; [] + 'a'
+'a'
+</code></pre><pre><code>&gt; {} + ''
+0
+</code></pre><pre><code>&gt; {} + '1'
+1
+</code></pre><pre><code>&gt; {} + 'a'
+NaN
+</code></pre><p>Lol.</p><p>Okay, subtraction maybe:</p><pre><code>&gt; [] - []
+0
+</code></pre><pre><code>&gt; {} - {}
+NaN
+</code></pre><pre><code>&gt; [] - ''
+''
+</code></pre><pre><code>&gt; [] - '1'
+-1
+</code></pre><pre><code>&gt; [] - {}
+NaN
+</code></pre><p>FML.</p><p>But, my favorite one is this:</p><pre><code>&gt; {} - []
+-0
+</code></pre><p>Follow-up post: <a href=/2018/08/16/minimal-npm-packages/>Minimalistic javascript packages</a></p></article><br><div class=tags><div class="horizontal-links links"><a href=/tags/tech/>#tech</a></div></div></article></main><footer><div class=content-container><div class=content><p>Hey there! I&rsquo;m <b class=sway>Yundong</b>,</p><p>and this is my little corner of the internet. Feel free to take a look around, but please leave your shoes at the door!</p><p>I&rsquo;m a software engineer by profession, with a passion for learning new things, tinkering with electronics, and working on building a decentralized internet.</p><p>💖 I love Dota2, music, art, and the world we live in.
+If you&rsquo;re interested in collaborating, <em>or if you just want to chat, feel free to <a href=mailto:yundongzhang97@gmail.com>email</a> me!</em><br></p><p class=horizontal-links><a href=/posts>All Posts</a><a href=/photos>Photo albums</a><a href=/tags>List of tags</a></p></div><div class=footer-text><span class=footer-emoji>✌️</span></div></div></footer><script>const emailId=atob("eXVuZG9uZ3poYW5nOTdAZ21haWwuY29t");</script><script src=/js/rocinante.min.js></script></body></html>
