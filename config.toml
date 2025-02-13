@@ -31,28 +31,13 @@ I'm a software engineer by profession, with a passion for learning new things, t
 If you're interested in collaborating, _or if you just want to chat, feel free to email me!_
 <br>
 """
-
-  [[params.links]]
-    [[params.links.link]]
-      name = "Email"
-      href = "/contact"
-      specialEmailLink = true
-    [[params.links.link]]
-      name = "Github"
-      href = "https://github.com/isyundong"
-      newTab = true
-    [[params.links.link]]
-      name = "X"
-      href = "https://x.com/z971003"
-      newTab = true
-
-  [[params.links]]
-    [[params.links.link]]
-      name = "All Posts"
-      href = "/posts"
-    [[params.links.link]]
-      name = "Photo albums"
-      href = "/photos"
-    [[params.links.link]]
-      name = "List of tags"
-      href = "/tags"
+[[params.links]]
+  [[params.links.link]]
+    name = "All Posts"
+    href = "/posts"
+  [[params.links.link]]
+    name = "Photo albums"
+    href = "/photos"
+  [[params.links.link]]
+    name = "List of tags"
+    href = "/tags"
