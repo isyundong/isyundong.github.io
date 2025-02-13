@@ -1,5 +1,5 @@
 ---
-title: [2024] JinBao  🐱
+title: JinBao 2024 🐱
 date: 2025-02-13
 location: HangZhou, China
 tags: ["JinBao"]
