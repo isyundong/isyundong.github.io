@@ -395,7 +395,7 @@ footer {
     padding-left: 1em;
     margin-left: 1em;
   }
-  .photos {
+  .media {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.7em 0.7em;
@@ -413,7 +413,7 @@ footer {
   body {
     font-size: 14px;
   }
-  .album .photos {
+  .album .media {
     grid-template-columns: 1fr;
     a {
       grid-column-start: 1;

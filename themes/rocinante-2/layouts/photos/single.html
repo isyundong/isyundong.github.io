@@ -12,19 +12,28 @@
         </div>
         <article class="content">
             {{ .Content }}
-            <div class="photos">
+            <div class="media">
                 {{ range .Resources }}
-                    {{ if in .Name "Pano" }}
-                    {{ $image := .Resize "700x q100" }}
-                    <a href="{{.RelPermalink}}"  class="full-size">
-                        <img src="{{$image.RelPermalink}}" alt="">
-                    </a>
-                    {{ else }}
-                    {{ $image := .Resize "350x q100" }}
-                    <a href="{{.RelPermalink}}">
-                        <img src="{{$image.RelPermalink}}" alt="">
-                    </a>
-                    {{ end }}
+                {{ if in .Name "Pano" }}
+                {{ $image := .Resize "700x q100" }}
+                <a href="{{.RelPermalink}}"  class="full-size">
+                    <img src="{{$image.RelPermalink}}" alt="Image">
+                </a>
+                {{ else if or (in .Name "mov") (in .Name "mp4") }}
+                <!-- Video Files -->
+                {{ $video := .Resize "700x q100" }}
+                <a href="{{.RelPermalink}}" class="full-size">
+                    <video controls>
+                        <source src="{{ $video.RelPermalink }}" type="video/{{ .Extension }}">
+                        Your browser does not support the video tag.
+                    </video>
+                </a>
+                {{ else }}
+                {{ $image := .Resize "350x q100" }}
+                <a href="{{.RelPermalink}}">
+                    <img src="{{$image.RelPermalink}}" alt="Image">
+                </a>
+                {{ end }}
                 {{ end }}
             </div>
             <p>
