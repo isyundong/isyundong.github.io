@@ -1,3 +1,8 @@
+center span {
+    font-size: 12px;
+    color: #646464;
+}
+
 .sway {
     animation: sway 0.33s ease-in-out infinite normal;
     /* animation: sway 5s ease-out infinite normal; */
