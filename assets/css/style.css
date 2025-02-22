@@ -1,6 +1,13 @@
-center span {
+.content center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.content center span {
     font-size: 12px;
     color: #646464;
+    font-weight: 600;
 }
 
 .sway {
