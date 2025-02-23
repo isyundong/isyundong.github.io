@@ -1,5 +1,5 @@
 ---
-title: About 2025
+title: 关于 2025
 date: 2025-02-22
 tags: ["person"]
 ---

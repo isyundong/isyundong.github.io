@@ -1,5 +1,5 @@
 ---
-title: Home Network
+title: 家庭网络
 date: 2025-02-21
 tags: ["network", "homelab"]
 ---
