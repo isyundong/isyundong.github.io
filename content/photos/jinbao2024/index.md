@@ -7,4 +7,4 @@ footer: Shot on IPhone 14 Pro
 banner: IMG_2611.jpg
 ---
 
-<!--more-->
+<!--more--> 
