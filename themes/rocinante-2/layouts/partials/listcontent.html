@@ -4,11 +4,10 @@
     <article class="post-list">
         <div class="title-group-solo">
             <a href="{{ .RelPermalink }}">
+            <span class="date">{{ .Params.date.Format "2006 Jan 02" }}</span>
             {{ if eq .Type "photos" }}
-                <span class="date">{{ .Params.date.Format "2006 Jan 02" }}</span>
                 <span class="label">&nbsp;📸&nbsp;</span>
             {{ else }}
-                <span class="date">{{ .Params.date.Format "2006 Jan 02" }}</span>
                 <span class="label">&nbsp;📖&nbsp;</span>
             {{ end }}
             <span class="title">
