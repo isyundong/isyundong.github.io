@@ -30,3 +30,13 @@ I'm a software engineer by profession, with a passion for learning new things, t
 If you're interested in collaborating, _or if you just want to chat, feel free to <a href="mailto:yundongzhang97@gmail.com">email</a> me!_
 <br>
 """
+[[params.links]]
+  [[params.links.link]]
+    name = "All Posts"
+    href = "/posts"
+  [[params.links.link]]
+    name = "Photo albums"
+    href = "/photos"
+  [[params.links.link]]
+    name = "List of tags"
+    href = "/tags"
