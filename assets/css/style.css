@@ -15,7 +15,7 @@
 }
 
 .sway {
-    animation: sway 0.33s ease-in-out infinite normal;
+    animation: sway 0.65s ease-in-out infinite normal;
     /* animation: sway 5s ease-out infinite normal; */
     display: inline-block;
 }
@@ -54,11 +54,7 @@
   background-size: 200% auto;
   color: transparent !important;
   display: inline-block;
-  animation: shine 1s linear 1;
-  
-  &:hover {
-      animation: shine 1s linear infinite;
-  }
+  animation: shine 1s linear infinite;
 
   &:active {
     color: #00000055 !important;
