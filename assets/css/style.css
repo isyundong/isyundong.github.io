@@ -41,6 +41,9 @@
     }
 }
 
+.site-title {
+    opacity: 0;
+}
 
 /* .site-title {
     background: var(--gradient);
