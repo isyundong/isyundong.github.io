@@ -192,6 +192,26 @@ main {
     }
 }
 
+.sway {
+  user-select: none;
+  text-decoration: none;
+  border: none;
+  background: var(--gradient);
+  background-clip: text;
+  background-size: 200% auto;
+  color: transparent !important;
+  display: inline-block;
+  animation: shine 1s linear 1;
+  
+  &:hover {
+      animation: shine 1s linear infinite;
+    // color: var(--header-link-hover) !important;
+  }
+
+  &:active {
+    color: #00000055 !important;
+  }
+}
 header h2 {
   margin: 1em;
   a {
