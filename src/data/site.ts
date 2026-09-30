@@ -16,14 +16,14 @@ export type Project = {
   statusLabel: string;
 };
 
-// Only ipscaner is listed for now.
+// Only the IP tool is listed for now. ipscaner.com is a separate, untouched site.
 export const projects: Project[] = [
   {
-    name: 'IPScaner',
+    name: 'ip.zhang.stream',
     tag: 'Network',
     description: 'See your public IP, test latency, and check that split routing works.',
-    url: 'https://ipscaner.com',
-    host: 'ipscaner.com',
+    url: 'https://ip.zhang.stream',
+    host: 'ip.zhang.stream',
     status: 'ok',
     statusLabel: 'Online',
   },
