@@ -1,15 +1,14 @@
 # ZHANG.stream
 
-张云东的个人网站，基于 [Astro](https://astro.build)。
+Yundong Zhang's personal site, built with [Astro](https://astro.build). It is a single English page.
 
 ```sh
 npm install
-npm run dev      # 本地开发 http://localhost:4321
-npm run build    # 输出到 dist/
+npm run dev      # local dev at http://localhost:4321
+npm run build    # output in dist/
 ```
 
-- 文章：`src/content/posts/*.md`
-- 项目、相册、站点信息：`src/data/site.ts`
-- 共享设计规范样式：`public/ds/zs.css`，部署后地址是 `https://zhang.stream/ds/zs.css`，所有 `*.zhang.stream` 子站都引用这一份。
+- Site info and the project list: `src/data/site.ts`
+- Shared design system stylesheet: `public/ds/zs.css`. Once deployed it is served at `https://zhang.stream/ds/zs.css`, and every `*.zhang.stream` site and ipscaner.com loads it.
 
-部署目标是 Cloudflare Pages：构建命令 `npm run build`，输出目录 `dist`。
+Deploy target is Cloudflare Pages: build command `npm run build`, output directory `dist`.

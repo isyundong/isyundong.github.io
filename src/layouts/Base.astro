@@ -1,23 +1,19 @@
 ---
-import { site, nav, projects } from '../data/site';
+import { site } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
-  /** In-page sections, listed under the current page in the side index. */
-  sections?: { id: string; label: string }[];
 }
 
-const { title, description = site.description, sections = [] } = Astro.props;
-const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.author}`;
-const path = Astro.url.pathname;
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.author} · ${site.name}`;
 const year = new Date().getFullYear();
-const canonical = new URL(path, Astro.site);
-const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -33,53 +29,28 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     <meta property="og:url" content={canonical} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/favicon.png" />
-    <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
     <link rel="preload" href="/ds/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/ds/fonts/merriweather-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/ds/zs.css" />
-    <slot name="head" />
   </head>
   <body>
-    <a class="zs-skip" href="#main">跳到正文</a>
+    <a class="zs-skip" href="#main">Skip to content</a>
     <header class="zs-topbar">
       <div class="zs-container">
         <a class="zs-brand" href="/">ZHANG.stream</a>
-        <nav class="zs-tabs site-tabs" aria-label="主导航">
-          {nav.map((item) => (
-            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
-          ))}
-        </nav>
-        <nav class="zs-tabs top-links" aria-label="外部链接">
+        <nav class="zs-tabs" aria-label="Links">
           <a href={site.github} rel="noopener">GitHub</a>
-          <a href="/rss.xml">RSS</a>
+          <a href={`mailto:${site.email}`}>Email</a>
         </nav>
       </div>
     </header>
-
-    <div class="zs-container zs-doc">
-      <nav class="zs-toc" aria-label="目录">
-        {nav.map((item) => (
-          <>
-            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
-            {isCurrent(item.href) && sections.map((s) => <a class="sub" href={`#${s.id}`}>{s.label}</a>)}
-          </>
-        ))}
-        <span class="zs-label">子站</span>
-        {projects.map((p) => <a href={p.url} rel="noopener">{p.host}</a>)}
-      </nav>
-      <main id="main">
-        <slot />
-      </main>
-    </div>
-
+    <main id="main" class="zs-container page">
+      <slot />
+    </main>
     <footer class="zs-footer">
       <div class="zs-container">
         <span>© {year} {site.author}</span>
-        <nav aria-label="页脚">
-          <a href={`mailto:${site.email}`}>Email</a>
-          <a href={site.github} rel="noopener">GitHub</a>
-          <a href="/rss.xml">RSS</a>
-        </nav>
+        <span>zhang.stream</span>
       </div>
     </footer>
   </body>
@@ -87,12 +58,5 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
 
 <style is:global>
   body { min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom, 0px); }
-  body > .zs-doc { flex: 1; width: 100%; }
-  /* Wide screens use the side index; narrow screens use the tabs in the top bar. */
-  .site-tabs { display: none; }
-  @media (max-width: 1000px) {
-    .site-tabs { display: flex; }
-    .top-links { display: none; }
-    .zs-toc { display: none; }
-  }
+  .page { flex: 1; width: 100%; max-width: 880px; padding-bottom: 96px; }
 </style>

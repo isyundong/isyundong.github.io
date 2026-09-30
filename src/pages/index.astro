@@ -1,55 +1,45 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import ShaderBackground from '../components/ShaderBackground.astro';
-import PostList from '../components/PostList.astro';
-import ProjectGrid from '../components/ProjectGrid.astro';
-import PhotoGrid from '../components/PhotoGrid.astro';
-import { site, albums } from '../data/site';
-
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-const sections = [
-  { id: 'posts', label: '最近文章' },
-  { id: 'projects', label: '项目' },
-  { id: 'photos', label: '照片' },
-  { id: 'contact', label: '联系' },
-];
+import { site, projects } from '../data/site';
 ---
 
-<Base sections={sections}>
+<Base>
   <header class="hero">
     <ShaderBackground />
     <div class="hero-inner">
-      <p class="zs-label kicker">软件工程师</p>
+      <p class="zs-label kicker">Software engineer</p>
       <h1>Yundong Zhang</h1>
       <p class="lede">
-        喜欢学新东西、折腾电子元件，也在参与构建去中心化的互联网。平时玩 Dota2，听音乐，看艺术，也喜欢我们生活的这个世界。
+        I like learning new things, tinkering with electronics, and helping build a decentralized internet.
+        Outside of work: Dota 2, music, art, and this world we live in.
       </p>
       <div class="zs-row">
-        <a class="zs-btn zs-btn--primary" href={`mailto:${site.email}`}>给我写邮件</a>
-        <a class="zs-btn on-shader" href="/about/">关于我</a>
+        <a class="zs-btn zs-btn--primary" href={`mailto:${site.email}`}>Email me</a>
+        <a class="zs-btn on-shader" href={site.github} rel="noopener">GitHub</a>
       </div>
     </div>
   </header>
 
-  <h2 id="posts">最近文章</h2>
-  <PostList posts={posts.slice(0, 5)} />
-  <p class="more"><a href="/posts/">全部文章 →</a></p>
+  <h2 id="projects">Projects</h2>
+  <div class="zs-grid">
+    {projects.map((p) => (
+      <article class="zs-card">
+        <div class="zs-card-head">
+          <h3 class="zs-card-title">{p.name}</h3>
+          <span class="zs-badge zs-badge--secondary">{p.tag}</span>
+          <span class="zs-end"><span class={`zs-status zs-status--${p.status}`}>{p.statusLabel}</span></span>
+        </div>
+        <p class="desc">{p.description}</p>
+        <a class="zs-btn zs-btn--primary" href={p.url} rel="noopener">Open {p.host}</a>
+      </article>
+    ))}
+  </div>
 
-  <h2 id="projects">项目</h2>
-  <ProjectGrid />
-
-  <h2 id="photos">照片</h2>
-  <PhotoGrid albums={albums} limit={3} />
-  <p class="more"><a href="/photos/">全部照片 →</a></p>
-
-  <h2 id="contact">联系</h2>
+  <h2 id="contact">Contact</h2>
   <dl class="zs-kv contact">
     <dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
     <dt>GitHub</dt><dd><a href={site.github} rel="noopener">github.com/isyundong</a></dd>
-    <dt>RSS</dt><dd><a href="/rss.xml">zhang.stream/rss.xml</a></dd>
   </dl>
 </Base>
 
@@ -57,21 +47,19 @@ const sections = [
   .hero {
     position: relative;
     overflow: hidden;
-    margin-top: 34px;
+    margin-top: 40px;
     box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent);
     touch-action: pan-y;
   }
-  .hero-inner { position: relative; z-index: 1; padding: 40px 28px 28px; max-width: 560px; }
+  .hero-inner { position: relative; z-index: 1; padding: 48px 28px 32px; max-width: 580px; }
   .kicker { margin: 0; }
-  .on-shader { background: var(--card); }
   .hero h1 { margin: 2px 0 0; }
   .lede { margin: 10px 0 16px; }
-  .more { margin: 8px 0 0; font-size: 12px; }
+  .on-shader { background: var(--card); }
+  .desc { margin: 0 0 12px; color: var(--muted-foreground); }
   .contact { margin-top: 16px; }
-  @media (max-width: 1000px) {
-    .hero { margin-top: 24px; }
-  }
   @media (max-width: 640px) {
+    .hero { margin-top: 24px; }
     .hero-inner { padding: 28px 16px 20px; }
   }
 </style>
