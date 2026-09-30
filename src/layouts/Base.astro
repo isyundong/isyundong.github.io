@@ -1,0 +1,61 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const pageTitle = title ? `${title} · ${site.name}` : `${site.author} · ${site.name}`;
+const year = new Date().getFullYear();
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1c1c" media="(prefers-color-scheme: dark)" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="preload" href="/ds/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/ds/fonts/merriweather-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/ds/zs.css" />
+  </head>
+  <body>
+    <a class="zs-skip" href="#main">Skip to content</a>
+    <header class="zs-topbar">
+      <div class="zs-container">
+        <a class="zs-brand" href="/">ZHANG.stream</a>
+        <nav class="zs-tabs" aria-label="Links">
+          <a href={`mailto:${site.email}`}>Email</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="zs-container page">
+      <slot />
+    </main>
+    <footer class="zs-footer">
+      <div class="zs-container">
+        <span>© {year} {site.author}</span>
+        <span>zhang.stream</span>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  body { min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .page { flex: 1; width: 100%; max-width: 880px; padding-bottom: 96px; }
+</style>

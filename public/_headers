@@ -1,0 +1,10 @@
+# Cloudflare Pages headers. The shared design system is loaded by other sites
+# (*.zhang.stream), so its stylesheet and fonts must allow cross-origin use.
+# Pages applies every matching rule, so /ds/fonts/* inherits the CORS header from /ds/*
+# and only swaps the cache policy (the "!" line removes the inherited Cache-Control).
+/ds/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+/ds/fonts/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable

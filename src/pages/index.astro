@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import ShaderBackground from '../components/ShaderBackground.astro';
+import { site, projects } from '../data/site';
+---
+
+<Base>
+  <header class="hero">
+    <ShaderBackground />
+    <div class="hero-inner">
+      <p class="zs-label kicker">Software engineer</p>
+      <h1>Yundong Zhang</h1>
+      <p class="lede">
+        I like learning new things, tinkering with electronics, and helping build a decentralized internet.
+        Outside of work: Dota 2, music, art, and this world we live in.
+      </p>
+      <div class="zs-row">
+        <a class="zs-btn zs-btn--primary" href={`mailto:${site.email}`}>Email me</a>
+      </div>
+    </div>
+  </header>
+
+  <h2 id="projects">Projects</h2>
+  <ul class="projects">
+    {projects.map((p) => (
+      <li><a href={p.url} rel="noopener">{p.name}</a> <span class="zs-muted">— {p.description}</span></li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    margin-top: 40px;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent);
+    touch-action: pan-y;
+  }
+  .hero-inner { position: relative; z-index: 1; padding: 48px 28px 32px; max-width: 580px; }
+  .kicker { margin: 0; }
+  .hero h1 { margin: 2px 0 0; }
+  .lede { margin: 10px 0 16px; }
+  .projects { list-style: none; padding: 0; margin: 12px 0 0; }
+  .projects li { margin: 0; }
+  .projects a { font-weight: 600; }
+  @media (max-width: 640px) {
+    .hero { margin-top: 24px; }
+    .hero-inner { padding: 28px 16px 20px; }
+  }
+</style>
