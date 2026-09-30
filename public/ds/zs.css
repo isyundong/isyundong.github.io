@@ -194,6 +194,62 @@ a.zs-cell:hover h3 { color: var(--red-text); }
 
 @media (prefers-reduced-motion: reduce) { .zs-btn, .zs-cell { transition: none; } }
 
+/* Toggle: a secondary button that stays pressed */
+.zs-btn--secondary[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* A button inside the header nav looks like a nav link */
+.zs-nav button { appearance: none; background: none; border: 0; cursor: pointer; font: 700 13px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); padding: var(--space-1) 0; }
+.zs-nav button:hover { color: var(--red-text); }
+
+/* Tabs: in-page mode switcher for tool pages */
+.zs-tabs { display: flex; gap: var(--space-6); border-bottom: var(--rule-width) solid var(--rule); overflow-x: auto; scrollbar-width: none; }
+.zs-tabs::-webkit-scrollbar { display: none; }
+.zs-tab { appearance: none; background: none; border: 0; cursor: pointer; flex: none; padding: var(--space-3) 0; margin-bottom: calc(-1 * var(--rule-width)); border-bottom: 4px solid transparent; font: 700 15px/1.2 var(--font-sans); color: var(--ink-muted); text-decoration: none; white-space: nowrap; }
+.zs-tab:hover { color: var(--ink); }
+.zs-tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--red); }
+
+/* Table */
+.zs-table { width: 100%; border-collapse: collapse; font: 400 15px/1.5 var(--font-sans); font-variant-numeric: tabular-nums; }
+.zs-table th { text-align: left; padding: var(--space-2) var(--space-3); font: 700 12px/1.2 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; border-block: var(--rule-width) solid var(--rule); }
+.zs-table td { padding: var(--space-3); border-bottom: 1px solid var(--rule-soft); vertical-align: top; min-width: 0; overflow-wrap: anywhere; }
+.zs-table tr:last-child td { border-bottom: var(--rule-width) solid var(--rule); }
+.zs-table th:first-child, .zs-table td:first-child { padding-left: 0; }
+.zs-table th:last-child, .zs-table td:last-child { padding-right: 0; }
+@media (max-width: 640px) {
+  .zs-table thead { display: none; }
+  .zs-table, .zs-table tbody, .zs-table tr, .zs-table td { display: block; width: 100%; }
+  .zs-table tbody { border-top: var(--rule-width) solid var(--rule); }
+  .zs-table tr { padding: var(--space-3) 0; border-bottom: 1px solid var(--rule-soft); }
+  .zs-table tr:last-child { border-bottom: var(--rule-width) solid var(--rule); }
+  .zs-table td, .zs-table tr:last-child td { padding: 0; border: 0; }
+}
+
+/* KV: label / value pairs */
+.zs-kv { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: var(--space-2) var(--space-4); margin: 0; }
+.zs-kv dt { font: 700 12px/1.8 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+.zs-kv dd { margin: 0; font: 400 15px/1.6 var(--font-sans); overflow-wrap: anywhere; min-width: 0; }
+
+/* Code */
+.zs-code { margin: 0; padding: var(--space-4); background: var(--paper-raised); border: var(--rule-width) solid var(--rule); border-radius: var(--radius-none); overflow-x: auto; font: 400 14px/1.6 var(--font-mono); }
+code.zs-code-inline, .zs-code-inline { padding: 1px 5px; background: var(--paper-raised); font: 400 .9em/1 var(--font-mono); }
+
+/* Toast */
+.zs-toast { position: fixed; left: 50%; bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 50; padding: var(--space-2) var(--space-4); background: var(--ink); color: var(--paper); font: 700 13px/1.4 var(--font-sans); border-radius: var(--radius-none); opacity: 0; pointer-events: none; transition: opacity .12s ease; }
+.zs-toast[data-show="true"] { opacity: 1; }
+
+/* Latency dots: one dot per sample */
+.zs-dots { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.zs-dots > i { width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--ink-muted); }
+.zs-dots > i.ok { background: var(--ok); }
+.zs-dots > i.warn { background: var(--warn); }
+.zs-dots > i.danger { background: var(--danger); }
+.zs-dots > i.fail { background: transparent; box-shadow: inset 0 0 0 2px var(--danger); }
+.zs-figure { font: 800 40px/1 var(--font-sans); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.zs-figure--fail { color: var(--ink-muted); }
+
+@media (prefers-reduced-motion: reduce) { .zs-toast { transition: none; } }
+
+
 /* Page container */
 .zs-page { max-width: var(--wide); margin: 0 auto; padding-inline: var(--space-6); }
 .zs-page--app { max-width: var(--app-wide); }
