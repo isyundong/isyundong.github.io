@@ -18,36 +18,36 @@ interface Props {
 }
 
 const { post, newer, older } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const date = post.data.date.toISOString().slice(0, 10);
 const minutes = Math.max(1, Math.round((post.body ?? '').length / 500));
+const sections = headings.filter((h) => h.depth === 2).map((h) => ({ id: h.slug, label: h.text }));
 ---
 
-<Base title={post.data.title} description={post.data.description}>
-  <article class="zs-page">
-    <header class="zs-title">
-      <p class="zs-meta meta"><time datetime={post.data.date.toISOString()}>{date}</time> · {minutes} min</p>
+<Base title={post.data.title} description={post.data.description} sections={sections}>
+  <article>
+    <header class="zs-top">
       <h1>{post.data.title}</h1>
-      {post.data.tags.length > 0 && (
-        <div class="tags">{post.data.tags.map((t) => <span class="zs-tag">{t}</span>)}</div>
-      )}
+      <p class="zs-meta">
+        <time datetime={post.data.date.toISOString()}>{date}</time> · 约 {minutes} 分钟
+        {post.data.tags.length > 0 && <span class="tags">{post.data.tags.map((t) => <span class="zs-badge zs-badge--outline">{t}</span>)}</span>}
+      </p>
     </header>
     <div class="zs-prose">
       <Content />
     </div>
     <nav class="pager" aria-label="上一篇和下一篇">
-      {older ? <a href={`/posts/${older.id}/`}><small>上一篇</small>{older.data.title}</a> : <span />}
-      {newer ? <a class="next" href={`/posts/${newer.id}/`}><small>下一篇</small>{newer.data.title}</a> : <span />}
+      {older ? <a href={`/posts/${older.id}/`}><span class="zs-label">上一篇</span>{older.data.title}</a> : <span />}
+      {newer ? <a class="next" href={`/posts/${newer.id}/`}><span class="zs-label">下一篇</span>{newer.data.title}</a> : <span />}
     </nav>
   </article>
 </Base>
 
 <style>
-  .meta { margin: 0 0 var(--space-3); }
-  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
-  .pager { max-width: var(--measure); margin-top: var(--space-16); display: grid; grid-template-columns: 1fr 1fr; border-top: var(--rule-width) solid var(--rule); border-bottom: var(--rule-width) solid var(--rule); }
-  .pager a { padding: var(--space-3) var(--space-4) var(--space-3) 0; color: var(--ink); text-decoration: none; font-weight: 700; min-width: 0; }
-  .pager a.next { padding: var(--space-3) 0 var(--space-3) var(--space-4); text-align: right; box-shadow: calc(-1 * var(--rule-width)) 0 0 var(--rule); grid-column: 2; }
-  .pager a:hover { color: var(--red-text); }
-  .pager small { display: block; margin-bottom: var(--space-1); font-size: 11px; letter-spacing: .1em; color: var(--red-text); }
+  .tags { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 8px; vertical-align: 1px; }
+  .pager { margin-top: 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .pager a { display: block; padding: 10px 12px; color: var(--foreground); text-decoration: none; box-shadow: inset 0 0 0 1px var(--border); min-width: 0; font-family: var(--font-heading); font-weight: 700; }
+  .pager a:hover { background: var(--muted); }
+  .pager a.next { text-align: right; grid-column: 2; }
+  .pager .zs-label { display: block; font-family: var(--font-mono); font-weight: 400; }
 </style>

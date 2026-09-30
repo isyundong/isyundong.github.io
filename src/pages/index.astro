@@ -5,68 +5,73 @@ import ShaderBackground from '../components/ShaderBackground.astro';
 import PostList from '../components/PostList.astro';
 import ProjectGrid from '../components/ProjectGrid.astro';
 import PhotoGrid from '../components/PhotoGrid.astro';
-import { site, albums, projects } from '../data/site';
+import { site, albums } from '../data/site';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const latest = posts[0];
-const project = projects[0];
+
+const sections = [
+  { id: 'posts', label: '最近文章' },
+  { id: 'projects', label: '项目' },
+  { id: 'photos', label: '照片' },
+  { id: 'contact', label: '联系' },
+];
 ---
 
-<Base>
-  <section class="hero">
+<Base sections={sections}>
+  <header class="hero">
     <ShaderBackground />
-    <div class="zs-page hero-inner">
-      <div class="zs-hero">
-        <h1 class="zs-hero-name">Yundong<span>Zhang</span></h1>
-        <p class="zs-hero-lede">
-          软件工程师。喜欢学新东西、折腾电子元件，也在参与构建去中心化的互联网。平时玩 Dota2，听音乐，看艺术，也喜欢我们生活的这个世界。
-        </p>
-        <div class="hero-actions">
-          <a class="zs-btn zs-btn--primary" href={`mailto:${site.email}`}>给我写邮件</a>
-          <a class="zs-btn zs-btn--secondary" href="/about/">关于我 →</a>
-        </div>
+    <div class="hero-inner">
+      <p class="zs-label kicker">软件工程师</p>
+      <h1>Yundong Zhang</h1>
+      <p class="lede">
+        喜欢学新东西、折腾电子元件，也在参与构建去中心化的互联网。平时玩 Dota2，听音乐，看艺术，也喜欢我们生活的这个世界。
+      </p>
+      <div class="zs-row">
+        <a class="zs-btn zs-btn--primary" href={`mailto:${site.email}`}>给我写邮件</a>
+        <a class="zs-btn on-shader" href="/about/">关于我</a>
       </div>
     </div>
-  </section>
+  </header>
 
-  <div class="zs-page">
-    <div class="zs-inforow">
-      {latest && (
-        <div><small>Latest</small><a class="zs-link" href={`/posts/${latest.id}/`}>{latest.data.title} →</a></div>
-      )}
-      {project && (
-        <div><small>Project</small><a class="zs-link" href={project.url} rel="noopener">{project.host}</a> · <span class={`zs-status zs-status--${project.status}`}>{project.statusLabel}</span></div>
-      )}
-      <div><small>Contact</small><span class="email">{site.email}</span></div>
-    </div>
+  <h2 id="posts">最近文章</h2>
+  <PostList posts={posts.slice(0, 5)} />
+  <p class="more"><a href="/posts/">全部文章 →</a></p>
 
-    <section class="zs-section">
-      <div class="zs-section-head"><h2>最近文章</h2><a href="/posts/">全部 →</a></div>
-      <PostList posts={posts.slice(0, 5)} />
-    </section>
+  <h2 id="projects">项目</h2>
+  <ProjectGrid />
 
-    <section class="zs-section">
-      <div class="zs-section-head"><h2>我做过的东西</h2><a href="/projects/">全部 →</a></div>
-      <ProjectGrid />
-    </section>
+  <h2 id="photos">照片</h2>
+  <PhotoGrid albums={albums} limit={3} />
+  <p class="more"><a href="/photos/">全部照片 →</a></p>
 
-    <section class="zs-section">
-      <div class="zs-section-head"><h2>照片</h2><a href="/photos/">全部 →</a></div>
-      <PhotoGrid albums={albums} limit={3} />
-    </section>
-  </div>
+  <h2 id="contact">联系</h2>
+  <dl class="zs-kv contact">
+    <dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+    <dt>GitHub</dt><dd><a href={site.github} rel="noopener">github.com/isyundong</a></dd>
+    <dt>RSS</dt><dd><a href="/rss.xml">zhang.stream/rss.xml</a></dd>
+  </dl>
 </Base>
 
 <style>
-  .hero { position: relative; overflow: hidden; touch-action: pan-y; }
-  .hero-inner { position: relative; z-index: 1; }
-  .hero .zs-hero { padding-block: var(--space-24) var(--space-16); }
-  .hero .zs-hero-name { font-size: clamp(56px, 12vw, 152px); }
-  .hero .zs-hero-lede { color: var(--ink); }
-  .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
-  .email { font-family: var(--font-mono); font-size: 14px; overflow-wrap: anywhere; user-select: all; }
+  .hero {
+    position: relative;
+    overflow: hidden;
+    margin-top: 34px;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--foreground) 10%, transparent);
+    touch-action: pan-y;
+  }
+  .hero-inner { position: relative; z-index: 1; padding: 40px 28px 28px; max-width: 560px; }
+  .kicker { margin: 0; }
+  .on-shader { background: var(--card); }
+  .hero h1 { margin: 2px 0 0; }
+  .lede { margin: 10px 0 16px; }
+  .more { margin: 8px 0 0; font-size: 12px; }
+  .contact { margin-top: 16px; }
+  @media (max-width: 1000px) {
+    .hero { margin-top: 24px; }
+  }
   @media (max-width: 640px) {
-    .hero .zs-hero { padding-block: var(--space-16) var(--space-12); }
+    .hero-inner { padding: 28px 16px 20px; }
   }
 </style>

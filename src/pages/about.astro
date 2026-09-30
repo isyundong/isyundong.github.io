@@ -3,23 +3,20 @@ import Base from '../layouts/Base.astro';
 import { site } from '../data/site';
 ---
 
-<Base title="关于" description="关于张云东。">
-  <div class="zs-page">
-    <div class="zs-title">
-      <h1>关于</h1>
-    </div>
-    <div class="zs-prose">
-      <p>嗨，我是云东，这里是我在互联网上的一个小角落。随便看看，进门记得换鞋。</p>
-      <p>我的职业是软件工程师。喜欢学新东西、折腾电子元件，也在参与构建去中心化的互联网。</p>
-      <p>我喜欢 Dota2、音乐、艺术，也喜欢我们生活的这个世界。</p>
-      <h2>联系我</h2>
-      <p>想合作，或者只是想聊聊，都欢迎给我写邮件：</p>
-      <p class="email">{site.email}</p>
-      <p>也可以在 <a href={site.github} rel="noopener">GitHub</a> 上找到我。</p>
-    </div>
+<Base title="关于" description="关于张云东。" sections={[{ id: 'contact', label: '联系我' }]}>
+  <header class="zs-top">
+    <h1>关于</h1>
+    <p class="zs-meta">软件工程师 · Yundong Zhang</p>
+  </header>
+  <div class="zs-prose">
+    <p>嗨，我是云东，这里是我在互联网上的一个小角落。随便看看，进门记得换鞋。</p>
+    <p>我的职业是软件工程师。喜欢学新东西、折腾电子元件，也在参与构建去中心化的互联网。</p>
+    <p>我喜欢 Dota2、音乐、艺术，也喜欢我们生活的这个世界。</p>
+    <h2 id="contact">联系我</h2>
+    <p>想合作，或者只是想聊聊，都欢迎给我写邮件。</p>
   </div>
+  <dl class="zs-kv">
+    <dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+    <dt>GitHub</dt><dd><a href={site.github} rel="noopener">github.com/isyundong</a></dd>
+  </dl>
 </Base>
-
-<style>
-  .email { font-family: var(--font-mono); font-size: 16px; user-select: all; overflow-wrap: anywhere; }
-</style>

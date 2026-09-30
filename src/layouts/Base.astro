@@ -1,16 +1,19 @@
 ---
-import { site, nav } from '../data/site';
+import { site, nav, projects } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
+  /** In-page sections, listed under the current page in the side index. */
+  sections?: { id: string; label: string }[];
 }
 
-const { title, description = site.description } = Astro.props;
+const { title, description = site.description, sections = [] } = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.author}`;
 const path = Astro.url.pathname;
 const year = new Date().getFullYear();
 const canonical = new URL(path, Astro.site);
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
 <!doctype html>
@@ -22,8 +25,8 @@ const canonical = new URL(path, Astro.site);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#e8e4da" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#151412" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1c1c1c" media="(prefers-color-scheme: dark)" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -31,36 +34,65 @@ const canonical = new URL(path, Astro.site);
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+    <link rel="preload" href="/ds/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/ds/fonts/merriweather-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/ds/zs.css" />
     <slot name="head" />
   </head>
   <body>
-    <a class="skip" href="#main">跳到正文</a>
-    <header class="zs-header">
-      <a class="zs-logo" href="/">ZHANG<span>.</span>stream</a>
-      <nav class="zs-nav" aria-label="主导航">
-        {nav.map((item) => (
-          <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>
-        ))}
-      </nav>
+    <a class="zs-skip" href="#main">跳到正文</a>
+    <header class="zs-topbar">
+      <div class="zs-container">
+        <a class="zs-brand" href="/">ZHANG.stream</a>
+        <nav class="zs-tabs site-tabs" aria-label="主导航">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
+        <nav class="zs-tabs top-links" aria-label="外部链接">
+          <a href={site.github} rel="noopener">GitHub</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
     </header>
-    <main id="main">
-      <slot />
-    </main>
-    <footer class="zs-footer">
-      <span>© {year} {site.author}</span>
-      <nav aria-label="页脚">
-        <a href={`mailto:${site.email}`}>Email</a>
-        <a href={site.github} rel="noopener">GitHub</a>
-        <a href="/rss.xml">RSS</a>
+
+    <div class="zs-container zs-doc">
+      <nav class="zs-toc" aria-label="目录">
+        {nav.map((item) => (
+          <>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+            {isCurrent(item.href) && sections.map((s) => <a class="sub" href={`#${s.id}`}>{s.label}</a>)}
+          </>
+        ))}
+        <span class="zs-label">子站</span>
+        {projects.map((p) => <a href={p.url} rel="noopener">{p.host}</a>)}
       </nav>
+      <main id="main">
+        <slot />
+      </main>
+    </div>
+
+    <footer class="zs-footer">
+      <div class="zs-container">
+        <span>© {year} {site.author}</span>
+        <nav aria-label="页脚">
+          <a href={`mailto:${site.email}`}>Email</a>
+          <a href={site.github} rel="noopener">GitHub</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
     </footer>
   </body>
 </html>
 
 <style is:global>
-  body { min-height: 100dvh; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  main { flex: 1; width: 100%; }
-  .skip { position: absolute; left: -9999px; top: 0; }
-  .skip:focus { left: var(--space-4); top: var(--space-2); z-index: 10; background: var(--ink); color: var(--paper); padding: var(--space-2) var(--space-3); font-weight: 700; }
+  body { min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body > .zs-doc { flex: 1; width: 100%; }
+  /* Wide screens use the side index; narrow screens use the tabs in the top bar. */
+  .site-tabs { display: none; }
+  @media (max-width: 1000px) {
+    .site-tabs { display: flex; }
+    .top-links { display: none; }
+    .zs-toc { display: none; }
+  }
 </style>

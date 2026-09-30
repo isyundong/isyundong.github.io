@@ -1,7 +1,7 @@
 ---
-// Background effect for the home hero: an animated WebGL mesh gradient with paper grain,
-// in the ZHANG.stream palette (paper, warm sand, one red spot).
-// Uses @paper-design/shaders (Apache-2.0). Falls back to a static CSS gradient without WebGL.
+// Background effect for the home hero: a slow WebGL mesh gradient (@paper-design/shaders, Apache-2.0).
+// Colours come from the design tokens, read through a probe element, so light and dark follow the theme.
+// Without WebGL the static CSS gradient below stays.
 ---
 
 <div class="shader-bg" aria-hidden="true"></div>
@@ -13,22 +13,18 @@
     z-index: 0;
     pointer-events: none;
     background:
-      radial-gradient(60% 80% at 85% 20%, color-mix(in srgb, var(--red) 55%, transparent), transparent 70%),
-      radial-gradient(50% 70% at 60% 90%, color-mix(in srgb, var(--rule-soft) 40%, transparent), transparent 70%),
-      var(--paper);
+      radial-gradient(60% 90% at 90% 10%, color-mix(in oklab, var(--info) 28%, transparent), transparent 70%),
+      radial-gradient(50% 80% at 70% 100%, color-mix(in oklab, var(--chart-4) 14%, transparent), transparent 70%),
+      var(--card);
+    /* Keep the text side calm. */
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25), #000 75%);
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.25), #000 75%);
   }
-  .shader-bg :global(canvas) {
-    display: block;
-  }
-  /* Keep the left side calm so the name and intro stay readable. */
-  .shader-bg {
-    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 70%);
-    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 70%);
-  }
+  .shader-bg :global(canvas) { display: block; }
   @media (max-width: 640px) {
     .shader-bg {
-      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), #000 85%);
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), #000 85%);
+      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), #000 90%);
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), #000 90%);
     }
   }
 </style>
@@ -37,26 +33,41 @@
   import {
     ShaderMount,
     meshGradientFragmentShader,
-    getShaderColorFromString,
     defaultObjectSizing,
     ShaderFitOptions,
   } from '@paper-design/shaders';
 
-  const PALETTES = {
-    light: ['#e8e4da', '#f4f1ea', '#dcd2c0', '#e8e4da', '#ebbcaa', '#d6361f'],
-    dark: ['#151412', '#1f1d1a', '#2b241f', '#151412', '#4a261c', '#c9452c'],
-  };
+  // [token, strength]: strength mixes the token into the card colour, keeping the effect quiet.
+  const STOPS: [string, number][] = [
+    ['--card', 1],
+    ['--muted', 1],
+    ['--info', 0.25],
+    ['--card', 1],
+    ['--chart-4', 0.18],
+    ['--info', 0.45],
+  ];
 
   const el = document.querySelector<HTMLElement>('.shader-bg');
   const dark = window.matchMedia('(prefers-color-scheme: dark)');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  const isDark = () => {
-    const forced = document.documentElement.dataset.theme;
-    return forced ? forced === 'dark' : dark.matches;
+  // Canvas cannot read CSS variables: resolve each token through a probe span, then to RGBA via a 1px canvas.
+  const probe = document.createElement('span');
+  probe.style.display = 'none';
+  document.body.append(probe);
+  const px = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
+  const rgba = (css: string) => {
+    px.clearRect(0, 0, 1, 1);
+    px.fillStyle = css;
+    px.fillRect(0, 0, 1, 1);
+    const [r, g, b, a] = px.getImageData(0, 0, 1, 1).data;
+    return [r / 255, g / 255, b / 255, a / 255];
   };
-
-  const colors = () => (isDark() ? PALETTES.dark : PALETTES.light).map(getShaderColorFromString);
+  const colors = () =>
+    STOPS.map(([token, k]) => {
+      probe.style.color = `color-mix(in srgb, var(${token}) ${k * 100}%, var(--card))`;
+      return rgba(getComputedStyle(probe).color);
+    });
 
   if (el) {
     try {
@@ -65,11 +76,11 @@
         meshGradientFragmentShader,
         {
           u_colors: colors(),
-          u_colorsCount: 6,
+          u_colorsCount: STOPS.length,
           u_distortion: 0.8,
-          u_swirl: 0.35,
-          u_grainMixer: 0.15,
-          u_grainOverlay: 0.18,
+          u_swirl: 0.3,
+          u_grainMixer: 0,
+          u_grainOverlay: 0.06,
           u_fit: ShaderFitOptions.cover,
           u_scale: 1,
           u_rotation: 0,
@@ -81,14 +92,14 @@
           u_worldHeight: 0,
         },
         undefined,
-        reduce.matches ? 0 : 0.35,
+        reduce.matches ? 0 : 0.3,
         4000,
         1,
         1920 * 1080 * 2,
       );
       el.style.background = 'none';
       dark.addEventListener('change', () => mount.setUniforms({ u_colors: colors() }));
-      reduce.addEventListener('change', () => mount.setSpeed(reduce.matches ? 0 : 0.35));
+      reduce.addEventListener('change', () => mount.setSpeed(reduce.matches ? 0 : 0.3));
     } catch {
       // No WebGL: the CSS gradient on .shader-bg stays as the background.
     }

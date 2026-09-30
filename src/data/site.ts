@@ -7,6 +7,7 @@ export const site = {
 };
 
 export const nav = [
+  { href: '/', label: '首页' },
   { href: '/posts/', label: '文章' },
   { href: '/projects/', label: '项目' },
   { href: '/photos/', label: '照片' },
@@ -19,7 +20,7 @@ export type Project = {
   description: string;
   url: string;
   host: string;
-  status: 'ok' | 'warn' | 'danger' | 'idle';
+  status: 'ok' | 'warn' | 'bad' | 'unknown';
   statusLabel: string;
 };
 

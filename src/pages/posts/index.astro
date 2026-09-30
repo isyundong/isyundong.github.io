@@ -6,19 +6,22 @@ import PostList from '../../components/PostList.astro';
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const years = [...new Set(posts.map((p) => p.data.date.getFullYear()))];
+const inYear = (y: number) => posts.filter((p) => p.data.date.getFullYear() === y);
 ---
 
-<Base title="文章" description="张云东写的文章：网络、NAS、工具和日常折腾。">
-  <div class="zs-page">
-    <div class="zs-title">
-      <h1>文章</h1>
-      <p>网络、NAS、工具，以及日常折腾的记录。</p>
-    </div>
-    {years.map((year, i) => (
-      <section class={i === 0 ? '' : 'zs-section'}>
-        <div class="zs-section-head"><h2>{year}</h2><span class="zs-meta">{posts.filter((p) => p.data.date.getFullYear() === year).length} 篇</span></div>
-        <PostList posts={posts.filter((p) => p.data.date.getFullYear() === year)} />
-      </section>
-    ))}
-  </div>
+<Base title="文章" description="张云东写的文章：网络、NAS、工具和日常折腾。" sections={years.map((y) => ({ id: `y${y}`, label: String(y) }))}>
+  <header class="zs-top">
+    <h1>文章</h1>
+    <p class="zs-meta">网络、NAS、工具，以及日常折腾的记录。共 {posts.length} 篇。</p>
+  </header>
+  {years.map((year) => (
+    <section>
+      <h2 id={`y${year}`}>{year} <span class="zs-meta count">{inYear(year).length} 篇</span></h2>
+      <PostList posts={inYear(year)} />
+    </section>
+  ))}
 </Base>
+
+<style>
+  .count { font-family: var(--font-mono); font-weight: 400; margin-left: 6px; }
+</style>

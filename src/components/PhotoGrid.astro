@@ -17,7 +17,7 @@ const shown = limit ? items.slice(0, limit) : items;
       <img src={p.src} alt={p.alt} loading="lazy" decoding="async" />
       <figcaption>
         <span>{p.album.title} · {p.album.location}</span>
-        <span class="zs-meta">{p.album.date}</span>
+        <span class="tnum">{p.album.date}</span>
       </figcaption>
     </figure>
   ))}

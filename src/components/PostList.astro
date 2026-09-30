@@ -9,14 +9,35 @@ const { posts } = Astro.props;
 const fmt = (d: Date) => d.toISOString().slice(0, 10);
 ---
 
-<ol class="zs-posts">
-  {posts.map((post) => (
-    <li class="zs-post">
-      <time class="zs-meta" datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time>
-      <div>
-        <h3><a href={`/posts/${post.id}/`}>{post.data.title}</a></h3>
-        {post.data.description && <p>{post.data.description}</p>}
-      </div>
-    </li>
-  ))}
-</ol>
+<div class="zs-table-wrap">
+  <table class="zs-table posts">
+    <thead>
+      <tr><th class="d">日期</th><th>标题</th><th class="t">标签</th></tr>
+    </thead>
+    <tbody>
+      {posts.map((post) => (
+        <tr>
+          <td class="nw d"><time datetime={post.data.date.toISOString()}>{fmt(post.data.date)}</time></td>
+          <td>
+            <a href={`/posts/${post.id}/`}>{post.data.title}</a>
+            {post.data.description && <div class="zs-muted desc">{post.data.description}</div>}
+          </td>
+          <td class="t">
+            <span class="tags">{post.data.tags.map((t) => <span class="zs-badge zs-badge--outline">{t}</span>)}</span>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .posts .d { width: 96px; }
+  .posts .t { width: 1%; }
+  .posts td a { font-weight: 600; }
+  .desc { margin-top: 2px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  @media (max-width: 640px) {
+    .posts .t { display: none; }
+  }
+</style>
