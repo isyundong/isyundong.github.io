@@ -22,7 +22,7 @@ import { site, projects } from '../data/site';
   </header>
 
   <h2 id="projects">Projects</h2>
-  <div class="zs-grid">
+  <div class="projects">
     {projects.map((p) => (
       <article class="zs-card">
         <div class="zs-card-head">
@@ -36,11 +36,6 @@ import { site, projects } from '../data/site';
     ))}
   </div>
 
-  <h2 id="contact">Contact</h2>
-  <dl class="zs-kv contact">
-    <dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
-    <dt>GitHub</dt><dd><a href={site.github} rel="noopener">github.com/isyundong</a></dd>
-  </dl>
 </Base>
 
 <style>
@@ -57,9 +52,10 @@ import { site, projects } from '../data/site';
   .lede { margin: 10px 0 16px; }
   .on-shader { background: var(--card); }
   .desc { margin: 0 0 12px; color: var(--muted-foreground); }
-  .contact { margin-top: 16px; }
+  .projects { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 320px)); }
   @media (max-width: 640px) {
     .hero { margin-top: 24px; }
     .hero-inner { padding: 28px 16px 20px; }
+    .projects { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
