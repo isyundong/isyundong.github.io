@@ -21,20 +21,11 @@ import { site, projects } from '../data/site';
   </header>
 
   <h2 id="projects">Projects</h2>
-  <div class="projects">
+  <ul class="projects">
     {projects.map((p) => (
-      <article class="zs-card">
-        <div class="zs-card-head">
-          <h3 class="zs-card-title">{p.name}</h3>
-          <span class="zs-badge zs-badge--secondary">{p.tag}</span>
-          <span class="zs-end"><span class={`zs-status zs-status--${p.status}`}>{p.statusLabel}</span></span>
-        </div>
-        <p class="desc">{p.description}</p>
-        <a class="zs-btn zs-btn--primary" href={p.url} rel="noopener">Open {p.host}</a>
-      </article>
+      <li><a href={p.url} rel="noopener">{p.name}</a> <span class="zs-muted">— {p.description}</span></li>
     ))}
-  </div>
-
+  </ul>
 </Base>
 
 <style>
@@ -49,12 +40,11 @@ import { site, projects } from '../data/site';
   .kicker { margin: 0; }
   .hero h1 { margin: 2px 0 0; }
   .lede { margin: 10px 0 16px; }
-  .on-shader { background: var(--card); }
-  .desc { margin: 0 0 12px; color: var(--muted-foreground); }
-  .projects { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 320px)); }
+  .projects { list-style: none; padding: 0; margin: 12px 0 0; }
+  .projects li { margin: 0; }
+  .projects a { font-weight: 600; }
   @media (max-width: 640px) {
     .hero { margin-top: 24px; }
     .hero-inner { padding: 28px 16px 20px; }
-    .projects { grid-template-columns: minmax(0, 1fr); }
   }
 </style>
