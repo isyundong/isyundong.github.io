@@ -1,0 +1,163 @@
+---
+// Background effect for the home hero: a field of thin horizontal lines that
+// drift like a stream and bend away from the pointer (or finger). One line is red.
+---
+
+<canvas class="stream-field" aria-hidden="true"></canvas>
+
+<style>
+  .stream-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.2), #000 65%);
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.2), #000 65%);
+  }
+  @media (max-width: 640px) {
+    .stream-field {
+      -webkit-mask-image: linear-gradient(180deg, #000, rgba(0, 0, 0, 0.25) 75%);
+      mask-image: linear-gradient(180deg, #000, rgba(0, 0, 0, 0.25) 75%);
+    }
+  }
+</style>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.stream-field');
+  const host = canvas?.parentElement;
+  const ctx = canvas?.getContext('2d');
+
+  if (canvas && host && ctx) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let gap = 16;
+    let step = 10;
+    let lineColor = '';
+    let redColor = '';
+    let running = false;
+    let visible = true;
+    let raf = 0;
+    const start = performance.now();
+
+    const readColors = () => {
+      const s = getComputedStyle(document.documentElement);
+      lineColor = s.getPropertyValue('--rule-soft').trim() || '#857f73';
+      redColor = s.getPropertyValue('--red').trim() || '#d6361f';
+    };
+
+    const resize = () => {
+      const rect = host.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      const narrow = width < 640;
+      gap = narrow ? 18 : 16;
+      step = narrow ? 14 : 10;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = (now: number) => {
+      const t = (now - start) / 1000;
+      pointer.x += (pointer.tx - pointer.x) * 0.12;
+      pointer.y += (pointer.ty - pointer.y) * 0.12;
+
+      ctx.clearRect(0, 0, width, height);
+      const lines = Math.ceil(height / gap) + 2;
+      const redIndex = Math.floor(lines * 0.93);
+      const radius = Math.min(220, width * 0.35);
+
+      for (let i = -1; i < lines; i++) {
+        const baseY = i * gap;
+        const isRed = i === redIndex;
+        ctx.beginPath();
+        for (let x = -step; x <= width + step; x += step) {
+          // Two travelling waves give the drift; the envelope keeps the left edge calmer.
+          const env = 0.35 + 0.65 * (x / width);
+          let y =
+            baseY +
+            Math.sin(x * 0.006 + t * 0.9 + i * 0.35) * 5 * env +
+            Math.sin(x * 0.017 - t * 1.4 + i * 0.8) * 2.2 * env;
+          // Push lines away from the pointer.
+          const dx = x - pointer.x;
+          const dy = y - pointer.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < radius * radius) {
+            const f = 1 - Math.sqrt(d2) / radius;
+            y += Math.sign(dy || 1) * f * f * 26;
+          }
+          if (x === -step) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = isRed ? redColor : lineColor;
+        ctx.globalAlpha = isRed ? 0.9 : 0.32;
+        ctx.lineWidth = isRed ? 2 : 1;
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const loop = (now: number) => {
+      draw(now);
+      if (running) raf = requestAnimationFrame(loop);
+    };
+
+    const update = () => {
+      const shouldRun = visible && !document.hidden && !reduce.matches;
+      if (shouldRun && !running) {
+        running = true;
+        raf = requestAnimationFrame(loop);
+      } else if (!shouldRun && running) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+      if (!shouldRun) draw(start + 4000);
+    };
+
+    const setPointer = (clientX: number, clientY: number) => {
+      const rect = host.getBoundingClientRect();
+      pointer.tx = clientX - rect.left;
+      pointer.ty = clientY - rect.top;
+      if (pointer.x < -1000) {
+        pointer.x = pointer.tx;
+        pointer.y = pointer.ty;
+      }
+    };
+    const clearPointer = () => {
+      pointer.tx = -9999;
+      pointer.ty = -9999;
+    };
+
+    host.addEventListener('pointermove', (e) => setPointer(e.clientX, e.clientY), { passive: true });
+    host.addEventListener('pointerdown', (e) => setPointer(e.clientX, e.clientY), { passive: true });
+    host.addEventListener('pointerleave', clearPointer);
+    host.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'mouse') clearPointer();
+    });
+
+    new ResizeObserver(() => {
+      resize();
+      if (!running) update();
+    }).observe(host);
+    new IntersectionObserver((entries) => {
+      visible = entries[0]?.isIntersecting ?? true;
+      update();
+    }).observe(host);
+    document.addEventListener('visibilitychange', update);
+    reduce.addEventListener('change', update);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      readColors();
+      if (!running) update();
+    });
+
+    readColors();
+    resize();
+    update();
+  }
+</script>

@@ -1,0 +1,17 @@
+---
+import { projects } from '../data/site';
+---
+
+<div class="zs-grid">
+  {projects.map((p) => (
+    <a class="zs-cell" href={p.url} rel="noopener">
+      <span><span class="zs-tag">{p.tag}</span></span>
+      <h3>{p.name}</h3>
+      <p>{p.description}</p>
+      <div class="zs-cell-foot">
+        <span class={`zs-status zs-status--${p.status}`}>{p.statusLabel}</span>
+        <span class="zs-meta">{p.host} →</span>
+      </div>
+    </a>
+  ))}
+</div>

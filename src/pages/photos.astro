@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import { albums } from '../data/site';
+---
+
+<Base title="照片" description="张云东拍的照片。">
+  <div class="zs-page">
+    <div class="zs-title">
+      <h1>照片</h1>
+      <p>随手拍的，按相册放。</p>
+    </div>
+    {albums.map((album, i) => (
+      <section class={i === 0 ? '' : 'zs-section'}>
+        <div class="zs-section-head"><h2>{album.title}</h2><span class="zs-meta">{album.location} · {album.date} · {album.camera}</span></div>
+        <PhotoGrid albums={[album]} />
+      </section>
+    ))}
+  </div>
+</Base>

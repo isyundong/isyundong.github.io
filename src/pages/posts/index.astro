@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const years = [...new Set(posts.map((p) => p.data.date.getFullYear()))];
+---
+
+<Base title="文章" description="张云东写的文章：网络、NAS、工具和日常折腾。">
+  <div class="zs-page">
+    <div class="zs-title">
+      <h1>文章</h1>
+      <p>网络、NAS、工具，以及日常折腾的记录。</p>
+    </div>
+    {years.map((year, i) => (
+      <section class={i === 0 ? '' : 'zs-section'}>
+        <div class="zs-section-head"><h2>{year}</h2><span class="zs-meta">{posts.filter((p) => p.data.date.getFullYear() === year).length} 篇</span></div>
+        <PostList posts={posts.filter((p) => p.data.date.getFullYear() === year)} />
+      </section>
+    ))}
+  </div>
+</Base>

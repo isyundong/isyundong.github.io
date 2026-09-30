@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import StreamField from '../components/StreamField.astro';
+import PostList from '../components/PostList.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import { site, albums, projects } from '../data/site';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latest = posts[0];
+const project = projects[0];
+---
+
+<Base>
+  <section class="hero">
+    <StreamField />
+    <div class="zs-page hero-inner">
+      <div class="zs-hero">
+        <h1 class="zs-hero-name">Yundong<span>Zhang</span></h1>
+        <p class="zs-hero-lede">
+          软件工程师。喜欢学新东西、折腾电子元件，也在参与构建去中心化的互联网。平时玩 Dota2，听音乐，看艺术，也喜欢我们生活的这个世界。
+        </p>
+        <div class="hero-actions">
+          <a class="zs-btn zs-btn--primary" href={`mailto:${site.email}`}>给我写邮件</a>
+          <a class="zs-btn zs-btn--secondary" href="/about/">关于我 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="zs-page">
+    <div class="zs-inforow">
+      {latest && (
+        <div><small>Latest</small><a class="zs-link" href={`/posts/${latest.id}/`}>{latest.data.title} →</a></div>
+      )}
+      {project && (
+        <div><small>Project</small><a class="zs-link" href={project.url} rel="noopener">{project.host}</a> · <span class={`zs-status zs-status--${project.status}`}>{project.statusLabel}</span></div>
+      )}
+      <div><small>Contact</small><span class="email">{site.email}</span></div>
+    </div>
+
+    <section class="zs-section">
+      <div class="zs-section-head"><h2>最近文章</h2><a href="/posts/">全部 →</a></div>
+      <PostList posts={posts.slice(0, 5)} />
+    </section>
+
+    <section class="zs-section">
+      <div class="zs-section-head"><h2>我做过的东西</h2><a href="/projects/">全部 →</a></div>
+      <ProjectGrid />
+    </section>
+
+    <section class="zs-section">
+      <div class="zs-section-head"><h2>照片</h2><a href="/photos/">全部 →</a></div>
+      <PhotoGrid albums={albums} limit={3} />
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero { position: relative; overflow: hidden; touch-action: pan-y; }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero .zs-hero { padding-block: var(--space-24) var(--space-16); }
+  .hero .zs-hero-name { font-size: clamp(56px, 12vw, 152px); }
+  .hero .zs-hero-lede { color: var(--ink); }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
+  .email { font-family: var(--font-mono); font-size: 14px; overflow-wrap: anywhere; user-select: all; }
+  @media (max-width: 640px) {
+    .hero .zs-hero { padding-block: var(--space-16) var(--space-12); }
+  }
+</style>

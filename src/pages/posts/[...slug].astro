@@ -1,0 +1,53 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = (await getCollection('posts', ({ data }) => !data.draft))
+    .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  newer?: CollectionEntry<'posts'>;
+  older?: CollectionEntry<'posts'>;
+}
+
+const { post, newer, older } = Astro.props;
+const { Content } = await render(post);
+const date = post.data.date.toISOString().slice(0, 10);
+const minutes = Math.max(1, Math.round((post.body ?? '').length / 500));
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article class="zs-page">
+    <header class="zs-title">
+      <p class="zs-meta meta"><time datetime={post.data.date.toISOString()}>{date}</time> · {minutes} min</p>
+      <h1>{post.data.title}</h1>
+      {post.data.tags.length > 0 && (
+        <div class="tags">{post.data.tags.map((t) => <span class="zs-tag">{t}</span>)}</div>
+      )}
+    </header>
+    <div class="zs-prose">
+      <Content />
+    </div>
+    <nav class="pager" aria-label="上一篇和下一篇">
+      {older ? <a href={`/posts/${older.id}/`}><small>上一篇</small>{older.data.title}</a> : <span />}
+      {newer ? <a class="next" href={`/posts/${newer.id}/`}><small>下一篇</small>{newer.data.title}</a> : <span />}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .meta { margin: 0 0 var(--space-3); }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+  .pager { max-width: var(--measure); margin-top: var(--space-16); display: grid; grid-template-columns: 1fr 1fr; border-top: var(--rule-width) solid var(--rule); border-bottom: var(--rule-width) solid var(--rule); }
+  .pager a { padding: var(--space-3) var(--space-4) var(--space-3) 0; color: var(--ink); text-decoration: none; font-weight: 700; min-width: 0; }
+  .pager a.next { padding: var(--space-3) 0 var(--space-3) var(--space-4); text-align: right; box-shadow: calc(-1 * var(--rule-width)) 0 0 var(--rule); grid-column: 2; }
+  .pager a:hover { color: var(--red-text); }
+  .pager small { display: block; margin-bottom: var(--space-1); font-size: 11px; letter-spacing: .1em; color: var(--red-text); }
+</style>
