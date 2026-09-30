@@ -1,0 +1,96 @@
+---
+// Background effect for the home hero: an animated WebGL mesh gradient with paper grain,
+// in the ZHANG.stream palette (paper, warm sand, one red spot).
+// Uses @paper-design/shaders (Apache-2.0). Falls back to a static CSS gradient without WebGL.
+---
+
+<div class="shader-bg" aria-hidden="true"></div>
+
+<style>
+  .shader-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 80% at 85% 20%, color-mix(in srgb, var(--red) 55%, transparent), transparent 70%),
+      radial-gradient(50% 70% at 60% 90%, color-mix(in srgb, var(--rule-soft) 40%, transparent), transparent 70%),
+      var(--paper);
+  }
+  .shader-bg :global(canvas) {
+    display: block;
+  }
+  /* Keep the left side calm so the name and intro stay readable. */
+  .shader-bg {
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 70%);
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.15), #000 70%);
+  }
+  @media (max-width: 640px) {
+    .shader-bg {
+      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), #000 85%);
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35), #000 85%);
+    }
+  }
+</style>
+
+<script>
+  import {
+    ShaderMount,
+    meshGradientFragmentShader,
+    getShaderColorFromString,
+    defaultObjectSizing,
+    ShaderFitOptions,
+  } from '@paper-design/shaders';
+
+  const PALETTES = {
+    light: ['#e8e4da', '#f4f1ea', '#dcd2c0', '#e8e4da', '#ebbcaa', '#d6361f'],
+    dark: ['#151412', '#1f1d1a', '#2b241f', '#151412', '#4a261c', '#c9452c'],
+  };
+
+  const el = document.querySelector<HTMLElement>('.shader-bg');
+  const dark = window.matchMedia('(prefers-color-scheme: dark)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const isDark = () => {
+    const forced = document.documentElement.dataset.theme;
+    return forced ? forced === 'dark' : dark.matches;
+  };
+
+  const colors = () => (isDark() ? PALETTES.dark : PALETTES.light).map(getShaderColorFromString);
+
+  if (el) {
+    try {
+      const mount = new ShaderMount(
+        el,
+        meshGradientFragmentShader,
+        {
+          u_colors: colors(),
+          u_colorsCount: 6,
+          u_distortion: 0.8,
+          u_swirl: 0.35,
+          u_grainMixer: 0.15,
+          u_grainOverlay: 0.18,
+          u_fit: ShaderFitOptions.cover,
+          u_scale: 1,
+          u_rotation: 0,
+          u_offsetX: 0,
+          u_offsetY: 0,
+          u_originX: defaultObjectSizing.originX,
+          u_originY: defaultObjectSizing.originY,
+          u_worldWidth: 0,
+          u_worldHeight: 0,
+        },
+        undefined,
+        reduce.matches ? 0 : 0.35,
+        4000,
+        1,
+        1920 * 1080 * 2,
+      );
+      el.style.background = 'none';
+      dark.addEventListener('change', () => mount.setUniforms({ u_colors: colors() }));
+      reduce.addEventListener('change', () => mount.setSpeed(reduce.matches ? 0 : 0.35));
+    } catch {
+      // No WebGL: the CSS gradient on .shader-bg stays as the background.
+    }
+  }
+</script>
